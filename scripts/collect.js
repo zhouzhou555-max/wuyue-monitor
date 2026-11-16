@@ -53,16 +53,16 @@ const OLD_DATA = oldData.DATA || {};
 function buildQueries() {
   const qs = [];
   for (const m of MALLS) {
-    qs.push({ mall: m.id, q: `${m.name} 新店 OR 开业` });
+    qs.push({ mall: m.id, q: `${m.name} 开业` });
+    qs.push({ mall: m.id, q: `${m.name} 首店 OR 新店 OR 招聘` });
     qs.push({ mall: m.id, q: `${m.name} 闭店 OR 活动` });
   }
   const seen = new Set();
   for (const m of MALLS) {
     for (const c of COMPETITORS[m.id] || []) {
-      const key = c.name;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      qs.push({ mall: m.id, q: `${c.name} 新店 OR 开业 OR 闭店` });
+      if (seen.has(c.name)) continue;
+      seen.add(c.name);
+      qs.push({ mall: m.id, q: `${c.name} 开业 OR 首店` });
     }
   }
   return qs;
@@ -264,18 +264,19 @@ async function main() {
     .map((r) => r.items.map((it) => `[查询:${r.query}] ${it.title} | ${it.desc.slice(0, 120)} | ${it.link} | ${it.pub}`).join('\n'))
     .join('\n') || '（本次无搜索结果）';
 
-  const prompt = `今天是 ${today}。请从下面的搜索结果中，找出「闽浙 12 家吾悦广场及其竞品商场」最近 1-2 天内发生的招商/运营动态。
+  const prompt = `今天是 ${today}。请从下面的搜索结果中，找出「闽浙 12 家吾悦广场及其竞品商场」最近 7 天内发生的招商/运营动态（含已开业、即将开业、围挡筹备、招聘信号、闭店撤场、调改、大型活动）。
 吾悦广场名单（mall 字段取值）：${mallList}
 
-【规则】
-1. 只提取搜索结果里真实存在的动态：新店开业(open)、闭店撤场(close)、品牌调整/升级(change)、大型活动(activity)、竞品商场动态(comp，含 subtype=open/close/change/event/risk)。
-2. 每条必须给出真实 source（媒体名）和 sourceUrl（搜索里的真实链接）；拿不到可靠来源就整条丢弃，宁缺毋滥，严禁编造。
-3. 与下面「已有事件」标题完全相同的不要重复输出。
-4. confidence：来源权威且日期明确=ok，其余=pending。
-5. 只输出 JSON，格式：{"events":[{...}]}，事件字段：type,subtype,brand,title,mall,floor,category,when(YYYY-MM-DD,可空),source,sourceUrl,confidence,note。events 可为空数组。
+【提取规则】
+1. 提取所有搜索结果里真实出现的动态：新店开业(open)、闭店撤场(close)、品牌调整/升级(change)、大型活动(activity)、竞品商场动态(comp，subtype=open/close/change/event/risk)。
+2. 每条必须来自搜索结果、给出真实 source（媒体名）和 sourceUrl（结果里的真实链接）。严禁编造不存在的品牌或事件。
+3. 日期不明确、或只是"筹备/招聘/围挡"未正式开业的，when 留空、confidence 用 pending——这类线索也要输出，不要因日期不确定就丢弃。
+4. 与下面「已有事件」标题完全相同或明显同一件事的，不要重复输出。
+5. confidence：来源权威且日期明确=ok，其余=pending。
+6. 只输出 JSON：{"events":[{...}]}，事件字段：type,subtype,brand,title,mall,floor,category,when(YYYY-MM-DD 或空),source,sourceUrl,confidence,note。events 可为空数组（确实没有才空）。
 
 【已有事件标题】
-${[...seenTitles].slice(0, 200).join('\n') || '（无）'}
+${[...seenTitles].slice(0, 300).join('\n') || '（无）'}
 
 【搜索结果】
 ${hitsText}`;
