@@ -8,8 +8,8 @@
 GitHub Actions (每天 09:00 UTC+8 定时)
    └─ scripts/collect.js
         1. 读 config.js（12 家吾悦 + 竞品映射）
-        2. Bing 新闻搜索各广场最新动态
-        3. 调 LLM 提炼为结构化事件
+        2. DeepSeek Search API 搜索各广场最新动态（lang:zh + 近14天过滤）
+        3. 调 DeepSeek Chat 提炼为结构化事件
         4. 写回 data.js（保留最近 7 天）
    └─ 自动 commit + push
    └─ GitHub Pages 自动部署 → 在线看板
@@ -48,5 +48,5 @@ GitHub Actions (每天 09:00 UTC+8 定时)
 ## 说明与限制
 
 - **定时准确性**：GitHub 免费仓库的 `schedule` 可能延迟数分钟到数十分钟，属正常现象。
-- **采集质量**：脚本用「Bing 新闻搜索 + LLM 提炼」，只在搜索结果里提取、**宁缺毋滥**，避免编造；建议用带联网的 LLM 模型提升准确度。
+- **采集引擎**：搜索用 DeepSeek Search API（`/v1/tools/search`，与 Chat 共用同一个 key，约 5 元/千次），中文覆盖强（能搜到公众号文章、本地新闻、论坛、招聘）；再用 DeepSeek Chat 提炼成结构化事件，**宁缺毋滥、绝不编造**。
 - **本地桌面入口**：把桌面 `.url` 快捷方式指向在线链接即可，电脑关着也能看最新数据。
