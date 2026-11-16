@@ -93,7 +93,7 @@ function decodeEntities(s) {
 
 // Google News RSS（Actions 海外节点稳定，新闻召回精准）
 async function googleNews(query) {
-  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query) + '&hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
+  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query + ' when:14d') + '&hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
   const xml = await fetchText(url);
   if (!xml) return [];
   const items = [];
@@ -129,16 +129,19 @@ async function bingWeb(query) {
   return items.slice(0, 5);
 }
 
-// 聚合降级
+// 并行多源，合并去重（Google News + Bing Web 都跑，最大化召回）
 async function searchWeb(query) {
-  const srcs = [['google', googleNews], ['bing', bingWeb]];
-  for (const [name, fn] of srcs) {
-    try {
-      const items = await fn(query);
-      if (items.length) { console.log(`  [${name}] ${query} -> ${items.length} 条`); return items; }
-    } catch (e) { console.log(`  [${name}] 失败 ${query}: ${e.message}`); }
-  }
-  return [];
+  const results = await Promise.allSettled([googleNews(query), bingWeb(query)]);
+  const items = [];
+  results.forEach((r, i) => {
+    const name = i === 0 ? 'google' : 'bing';
+    if (r.status === 'fulfilled' && r.value && r.value.length) {
+      console.log(`  [${name}] ${query} -> ${r.value.length} 条`);
+      items.push(...r.value);
+    }
+  });
+  const seen = new Set();
+  return items.filter((it) => { if (seen.has(it.link)) return false; seen.add(it.link); return true; }).slice(0, 8);
 }
 
 /* ---------- 4. LLM 提炼 ---------- */
