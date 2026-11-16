@@ -250,6 +250,8 @@ async function main() {
   }
   const totalHits = searchResults.reduce((a, r) => a + r.items.length, 0);
   console.log(`[collect] 搜索命中 ${totalHits} 条`);
+  const sample = searchResults.flatMap((r) => r.items).slice(0, 6);
+  sample.forEach((s) => console.log('  样本:', s.pub, '|', s.title.slice(0, 50), '|', s.link.slice(0, 60)));
 
   // 已有事件标题（去重）
   const seenTitles = new Set();
@@ -285,6 +287,7 @@ ${hitsText}`;
   let events;
   try {
     const content = await callLLM(prompt);
+    console.log('[collect] LLM 返回长度:', content.length, '| 前800字:', content.slice(0, 800));
     events = extractJson(content).events || [];
   } catch (e) {
     console.log(`[collect] LLM 失败，跳过本次：${e.message}`);
