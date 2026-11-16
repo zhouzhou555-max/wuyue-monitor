@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /* ============================================================
    闽浙吾悦商圈监控 · 每日采集脚本（GitHub Actions 定时运行）
-   流程：读 config.js + data.js → Bing 新闻搜索 → LLM 提炼 → 写回 data.js
-   环境变量（在 GitHub Secrets 配置）：
-     LLM_API_KEY   必填，OpenAI 兼容的 LLM key（如 DeepSeek）
+   搜索：DeepSeek Search API（POST /v1/tools/search，自研搜索引擎）
+   提炼：DeepSeek Chat API（deepseek-chat）
+   环境变量（GitHub Secrets）：
+     LLM_API_KEY   必填，DeepSeek key（搜索 + 提炼共用同一个 key）
      LLM_BASE_URL  选填，默认 https://api.deepseek.com
      LLM_MODEL     选填，默认 deepseek-chat
    ============================================================ */
@@ -15,11 +16,11 @@ const REPO = path.resolve(__dirname, '..');
 const CONFIG_PATH = path.join(REPO, 'config.js');
 const DATA_PATH = path.join(REPO, 'data.js');
 
+const LLM_API_KEY = process.env.LLM_API_KEY || '';
 const LLM_BASE_URL = (process.env.LLM_BASE_URL || 'https://api.deepseek.com').replace(/\/+$/, '');
 const LLM_MODEL = process.env.LLM_MODEL || 'deepseek-chat';
-const LLM_API_KEY = process.env.LLM_API_KEY || '';
 
-const DAYS_KEEP = 7; // data.js 保留最近 7 天
+const DAYS_KEEP = 7;
 
 /* ---------- 工具 ---------- */
 function loadWindow(file) {
@@ -31,7 +32,7 @@ function loadWindow(file) {
 }
 
 function beijingDate(offsetDays = 0) {
-  const now = new Date(Date.now() + (offsetDays) * 86400000);
+  const now = new Date(Date.now() + offsetDays * 86400000);
   const bj = new Date(now.getTime() + 8 * 3600 * 1000); // UTC+8
   return bj.toISOString().slice(0, 10);
 }
@@ -39,112 +40,57 @@ function beijingStamp() {
   const now = new Date(Date.now() + 8 * 3600 * 1000);
   return now.toISOString().slice(0, 10) + ' ' + now.toISOString().slice(11, 16);
 }
-
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/* ---------- 1. 读取配置 ---------- */
+/* ---------- 读取配置 ---------- */
 const config = loadWindow(CONFIG_PATH);
 const oldData = loadWindow(DATA_PATH);
 const MALLS = config.MALLS || [];
 const COMPETITORS = config.COMPETITORS || {};
 const OLD_DATA = oldData.DATA || {};
 
-/* ---------- 2. 构造搜索关键词 ---------- */
+/* ---------- 搜索：DeepSeek Search API ---------- */
+async function dsSearch(query) {
+  const r = await fetch('https://api.deepseek.com/v1/tools/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + LLM_API_KEY },
+    body: JSON.stringify({ query, count: 8, need_content: false })
+  });
+  if (r.status === 429) { await sleep(2000); return dsSearch(query); }
+  if (!r.ok) {
+    const t = await r.text().catch(() => '');
+    console.log(`  搜索失败 [${query.slice(0, 30)}]: HTTP ${r.status} ${t.slice(0, 120)}`);
+    return [];
+  }
+  const j = await r.json().catch(() => ({}));
+  return (j.results || []).map((it) => ({
+    title: it.title || '',
+    link: it.url || '',
+    desc: (it.summary || it.snippet || '').slice(0, 160),
+    pub: it.date || ''
+  }));
+}
+
 function buildQueries() {
+  const fromDate = beijingDate(-14); // 最近14天
+  const tail = ` lang:zh after:${fromDate}`;
   const qs = [];
   for (const m of MALLS) {
-    qs.push({ mall: m.id, q: `${m.name} 开业` });
-    qs.push({ mall: m.id, q: `${m.name} 首店 OR 新店 OR 招聘` });
-    qs.push({ mall: m.id, q: `${m.name} 闭店 OR 活动` });
+    qs.push({ mall: m.id, q: `${m.name} 新店 开业 闭店${tail}` });
+    qs.push({ mall: m.id, q: `${m.name} 活动 促销${tail}` });
   }
   const seen = new Set();
   for (const m of MALLS) {
     for (const c of COMPETITORS[m.id] || []) {
       if (seen.has(c.name)) continue;
       seen.add(c.name);
-      qs.push({ mall: m.id, q: `${c.name} 开业 OR 首店` });
+      qs.push({ mall: m.id, q: `${c.name} 开业 新店 闭店${tail}` });
     }
   }
   return qs;
 }
 
-/* ---------- 3. 多源新闻搜索（Google News RSS 优先，Bing 降级） ---------- */
-const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36';
-
-async function fetchText(url, timeoutMs = 12000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const r = await fetch(url, { headers: { 'User-Agent': UA, 'Accept-Language': 'zh-CN,zh;q=0.9' }, signal: ctrl.signal });
-    if (!r.ok) return '';
-    return await r.text();
-  } finally {
-    clearTimeout(t);
-  }
-}
-
-function stripTags(s) { return String(s).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
-function decodeEntities(s) {
-  return String(s)
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&nbsp;/g, ' ')
-    .replace(/&#\d+;/g, '');
-}
-
-// Google News RSS（Actions 海外节点稳定，新闻召回精准）
-async function googleNews(query) {
-  const url = 'https://news.google.com/rss/search?q=' + encodeURIComponent(query + ' when:14d') + '&hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
-  const xml = await fetchText(url);
-  if (!xml) return [];
-  const items = [];
-  const re = /<item>([\s\S]*?)<\/item>/g;
-  let m;
-  while ((m = re.exec(xml)) !== null) {
-    const b = m[1];
-    const g = (tag) => { const mm = b.match(new RegExp(`<${tag}>(?:<!\\[CDATA\\[)?([\\s\\S]*?)(?:\\]\\]>)?</${tag}>`)); return mm ? decodeEntities(stripTags(mm[1])) : ''; };
-    let title = g('title');
-    title = title.replace(/\s*-\s*[^-]+$/, '').trim(); // 去掉尾部 "- 来源"
-    const link = g('link');
-    const desc = g('description');
-    const pub = g('pubDate');
-    if (title && link) items.push({ title, link, desc, pub });
-  }
-  return items.slice(0, 5);
-}
-
-// Bing Web 搜索（HTML 解析，兜底）
-async function bingWeb(query) {
-  const url = 'https://www.bing.com/search?q=' + encodeURIComponent(query) + '&setlang=zh-CN&count=10';
-  const html = await fetchText(url);
-  if (!html) return [];
-  const items = [];
-  const re = /<li class="b_algo"[\s\S]*?<h2[^>]*><a[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a><\/h2>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/g;
-  let m;
-  while ((m = re.exec(html)) !== null) {
-    const link = decodeEntities(m[1]);
-    const title = decodeEntities(stripTags(m[2]));
-    const desc = decodeEntities(stripTags(m[3]));
-    if (title && link) items.push({ title, link, desc, pub: '' });
-  }
-  return items.slice(0, 5);
-}
-
-// 并行多源，合并去重（Google News + Bing Web 都跑，最大化召回）
-async function searchWeb(query) {
-  const results = await Promise.allSettled([googleNews(query), bingWeb(query)]);
-  const items = [];
-  results.forEach((r, i) => {
-    const name = i === 0 ? 'google' : 'bing';
-    if (r.status === 'fulfilled' && r.value && r.value.length) {
-      console.log(`  [${name}] ${query} -> ${r.value.length} 条`);
-      items.push(...r.value);
-    }
-  });
-  const seen = new Set();
-  return items.filter((it) => { if (seen.has(it.link)) return false; seen.add(it.link); return true; }).slice(0, 8);
-}
-
-/* ---------- 4. LLM 提炼 ---------- */
+/* ---------- LLM 提炼 ---------- */
 async function callLLM(prompt) {
   const r = await fetch(`${LLM_BASE_URL}/chat/completions`, {
     method: 'POST',
@@ -175,11 +121,11 @@ function extractJson(text) {
   return JSON.parse(text);
 }
 
-/* ---------- 5. 校验/合并/写回 ---------- */
+/* ---------- 校验 / 合并 / 写回 ---------- */
 const ALLOW_TYPE = ['open', 'close', 'change', 'activity', 'comp'];
 const ALLOW_SUBTYPE = ['open', 'close', 'change', 'event', 'risk', 'promo', 'sport', ''];
 
-function normalize(ev, mallIds, today) {
+function normalize(ev, mallIds) {
   const mall = String(ev.mall || '');
   if (!mallIds.includes(mall)) return null;
   let type = String(ev.type || '');
@@ -187,7 +133,7 @@ function normalize(ev, mallIds, today) {
   const brand = String(ev.brand || '').trim();
   const title = String(ev.title || '').trim();
   const source = String(ev.source || '').trim();
-  if (!title || !source) return null; // 无标题或无来源，丢弃（反幻觉）
+  if (!title || !source) return null;
   return {
     type,
     subtype: ALLOW_SUBTYPE.includes(ev.subtype) ? ev.subtype : (type === 'comp' ? 'open' : ''),
@@ -219,9 +165,8 @@ function writeData(data, stamp) {
 
 function pruneByDays(data) {
   const out = {};
-  const dates = Object.keys(data).sort();
   const keepFrom = beijingDate(-(DAYS_KEEP - 1));
-  for (const d of dates) {
+  for (const d of Object.keys(data).sort()) {
     if (d >= keepFrom) out[d] = data[d];
   }
   return out;
@@ -233,7 +178,7 @@ async function main() {
   console.log(`[collect] 开始，今天=${today}，LLM=${LLM_MODEL}`);
 
   if (!LLM_API_KEY) {
-    console.log('[collect] 未配置 LLM_API_KEY，跳过采集（不修改 data.js）');
+    console.log('[collect] 未配置 LLM_API_KEY，跳过');
     return;
   }
 
@@ -244,32 +189,26 @@ async function main() {
   const searchResults = [];
   for (let i = 0; i < queries.length; i += 5) {
     const batch = queries.slice(i, i + 5);
-    const res = await Promise.all(batch.map(async (q) => {
-      const items = await searchWeb(q.q);
-      return { query: q.q, mall: q.mall, items };
-    }));
+    const res = await Promise.all(batch.map(async (q) => ({ query: q.q, mall: q.mall, items: await dsSearch(q.q) })));
     searchResults.push(...res);
-    await sleep(300);
+    await sleep(200);
   }
   const totalHits = searchResults.reduce((a, r) => a + r.items.length, 0);
   console.log(`[collect] 搜索命中 ${totalHits} 条`);
   const sample = searchResults.flatMap((r) => r.items).slice(0, 6);
-  sample.forEach((s) => console.log('  样本:', s.pub, '|', s.title.slice(0, 50), '|', s.link.slice(0, 60)));
+  sample.forEach((s) => console.log('  样本:', (s.pub || '').slice(0, 10), '|', s.title.slice(0, 50), '|', s.link.slice(0, 55)));
 
   // 已有事件标题（去重）
   const seenTitles = new Set();
-  for (const d of Object.keys(OLD_DATA)) {
-    for (const e of OLD_DATA[d] || []) if (e.title) seenTitles.add(e.title);
-  }
+  for (const d of Object.keys(OLD_DATA)) for (const e of OLD_DATA[d] || []) if (e.title) seenTitles.add(e.title);
 
-  // 构造 prompt
   const mallList = MALLS.map((m) => `${m.id}(${m.name})`).join('、');
   const hitsText = searchResults
     .filter((r) => r.items.length)
-    .map((r) => r.items.map((it) => `[查询:${r.query}] ${it.title} | ${it.desc.slice(0, 120)} | ${it.link} | ${it.pub}`).join('\n'))
+    .map((r) => r.items.map((it) => `[查询:${r.query}] ${it.title} | ${it.desc} | ${it.link} | ${it.pub}`).join('\n'))
     .join('\n') || '（本次无搜索结果）';
 
-  const prompt = `今天是 ${today}。请从下面的搜索结果中，找出「闽浙 12 家吾悦广场及其竞品商场」最近 7 天内发生的招商/运营动态（含已开业、即将开业、围挡筹备、招聘信号、闭店撤场、调改、大型活动）。
+  const prompt = `今天是 ${today}。请从下面的搜索结果中，找出「闽浙 12 家吾悦广场及其竞品商场」最近 14 天内发生的招商/运营动态（含已开业、即将开业、围挡筹备、招聘信号、闭店撤场、调改、大型活动）。
 吾悦广场名单（mall 字段取值）：${mallList}
 
 【提取规则】
@@ -290,7 +229,7 @@ ${hitsText}`;
   let events;
   try {
     const content = await callLLM(prompt);
-    console.log('[collect] LLM 返回长度:', content.length, '| 前800字:', content.slice(0, 800));
+    console.log('[collect] LLM 返回长度:', content.length, '| 前600字:', content.slice(0, 600));
     events = extractJson(content).events || [];
   } catch (e) {
     console.log(`[collect] LLM 失败，跳过本次：${e.message}`);
@@ -301,7 +240,7 @@ ${hitsText}`;
   const fresh = [];
   let nextId = 1000;
   for (const e of events) {
-    const n = normalize(e, mallIds, today);
+    const n = normalize(e, mallIds);
     if (!n) continue;
     if (seenTitles.has(n.title)) continue;
     n.id = nextId++;
@@ -314,7 +253,6 @@ ${hitsText}`;
     return;
   }
 
-  // 合并
   const merged = JSON.parse(JSON.stringify(OLD_DATA));
   if (!merged[today]) merged[today] = [];
   merged[today] = merged[today].concat(fresh);
@@ -325,5 +263,5 @@ ${hitsText}`;
 
 main().catch((e) => {
   console.error('[collect] 异常：', e);
-  process.exit(0); // 不让 workflow 因网络抖动而红灯
+  process.exit(0);
 });
