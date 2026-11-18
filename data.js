@@ -5,7 +5,7 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-16 13:43";
+window.UPDATED_AT = "2026-11-18 09:33";
 
 window.DATA = {
   "2026-11-13": [
@@ -1076,6 +1076,128 @@ window.DATA = {
       "sourceUrl": "https://www.163.com/dy/article/LBENLB4S0535BCXL.html#1",
       "confidence": "ok",
       "note": "椒江宝龙城/宝龙水街项目公司11月3日被法院裁定受理破产重整，与已有事件'项目公司璟懿实业破产重整，11.3法院受理'为同一事件，此处仅作竞品风险提示，建议去重",
+      "id": 1007
+    }
+  ],
+  "2026-11-18": [
+    {
+      "type": "activity",
+      "subtype": "",
+      "brand": "",
+      "title": "路桥吾悦广场'双拥'主题市集（崇军市集）",
+      "mall": "lq",
+      "floor": "小圆厅",
+      "category": "活动",
+      "when": "2026-11-17",
+      "source": "浙江省退役军人事务厅",
+      "sourceUrl": "https://tyjrswt.zj.gov.cn/col/col1643650/art/2026/art_b315342bb7114d66b4a041d77a04a896.html",
+      "confidence": "ok",
+      "note": "区退役军人事务局等主办的特殊市集，近日下午在路桥吾悦小圆厅开展",
+      "id": 1000
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "俪索仓储",
+      "title": "俪索仓储（玉环吾悦二层2026商铺）招聘筹备中",
+      "mall": "yh",
+      "floor": "2F",
+      "category": "服饰",
+      "when": "",
+      "source": "台州人力网",
+      "sourceUrl": "https://job.tzrl.com/company/mrc224113.htm",
+      "confidence": "pending",
+      "note": "玉环市子书服装店（个体工商户）2026-11-12成立，地址为玉环吾悦二层2026商铺，正招聘店长/陈列店助，尚未见开业信息",
+      "id": 1001
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "",
+      "title": "台州湾吾悦广场南侧双地块11.11成功出让（开海城发+方远联合体10.48亿竞得）",
+      "mall": "tzw",
+      "floor": "—",
+      "category": "区域开发",
+      "when": "2026-11-11",
+      "source": "19楼台州",
+      "sourceUrl": "https://taizhou.19lou.com/forum-2012-thread-46051794793558723-1-1.html",
+      "confidence": "ok",
+      "note": "台州湾新区2026-Q03、Q04组合地块，位于台州湾吾悦广场南侧，涉宅用地出让，影响区域客群",
+      "id": 1002
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "星轶影城",
+      "title": "漳州吾悦星轶影城在影厅举办儿童剧表演，探索影院转型",
+      "mall": "zz",
+      "floor": "—",
+      "category": "影院/活动",
+      "when": "2026-11-17",
+      "source": "闽南日报/漳州新闻网",
+      "sourceUrl": "http://www.zznews.cn/system/2026/11/17/031412636.shtml",
+      "confidence": "ok",
+      "note": "星轶影城负责人称线下观影客流下滑，正通过儿童剧等多元内容转型",
+      "id": 1003
+    },
+    {
+      "type": "comp",
+      "subtype": "change",
+      "brand": "芗城万达影城",
+      "title": "芗城万达影城盘活大堂闲置空间引入拼豆小店",
+      "mall": "zz",
+      "floor": "—",
+      "category": "影院/业态调整",
+      "when": "2026-11-17",
+      "source": "漳州新闻网",
+      "sourceUrl": "http://www.xcxc.cn/system/2026/11/17/031412710.shtml",
+      "confidence": "ok",
+      "note": "竞品芗城万达影城大堂引入拼豆小店，属业态调改",
+      "id": 1004
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "IVEEN意未",
+      "title": "IVEEN意未 浙江首店（接棒温州万象城金街星巴克铺位）",
+      "mall": "wz",
+      "floor": "金街",
+      "category": "餐饮",
+      "when": "",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/w/1881270119960580/?wid=1794121079239",
+      "confidence": "pending",
+      "note": "温州万象城金街原星巴克铺位将迎广东全日制西餐品牌IVEEN意未浙江首店，尚未见开业日期",
+      "id": 1005
+    },
+    {
+      "type": "comp",
+      "subtype": "close",
+      "brand": "ZARA",
+      "title": "ZARA温州印象城MEGA店2026年1月关闭，彻底退出温州",
+      "mall": "wz",
+      "floor": "—",
+      "category": "服饰",
+      "when": "2026-01-01",
+      "source": "博晓通",
+      "sourceUrl": "https://www.bxtdata.com/insights/4834/ZARA%E6%9D%AD%E5%B7%9E%E5%8D%81%E5%B9%B4%E5%A4%A7%E5%BA%97%E9%97%AD%E5%BA%97%20%E6%97%97%E8%88%B0%E5%8C%96%E9%80%89%E5%9D%80%E6%80%8E%E4%B9%88%E9%87%8D%E6%8E%92",
+      "confidence": "pending",
+      "note": "竞品温州印象城MEGA的ZARA门店关闭，时间较早（2026年1月），非近14天动态，仅作竞品参考",
+      "id": 1006
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "福禧合",
+      "title": "江西福禧合商业管理有限公司衢州万达店计划2026年2月开业",
+      "mall": "qz",
+      "floor": "—",
+      "category": "商业运营",
+      "when": "",
+      "source": "衢州就业招聘（浙江省公共就业服务平台）",
+      "sourceUrl": "https://0570.zjhr.com/010/client/index7.jsp?column2=1&column1=8a129366a18c98b901a1a528cc032e15&t=1794795611611",
+      "confidence": "pending",
+      "note": "竞品衢州柯城万达广场，福禧合衢州万达店招聘中，计划2026年2月开业",
       "id": 1007
     }
   ]
