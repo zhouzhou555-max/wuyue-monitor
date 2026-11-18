@@ -125,9 +125,23 @@ function extractJson(text) {
 const ALLOW_TYPE = ['open', 'close', 'change', 'activity', 'comp'];
 const ALLOW_SUBTYPE = ['open', 'close', 'change', 'event', 'risk', 'promo', 'sport', ''];
 
+// 兜底：按竞品名反查所属吾悦广场
+function guessMallFromCompetitor(text) {
+  for (const [mid, comps] of Object.entries(COMPETITORS)) {
+    for (const c of comps) {
+      if (text.includes(c.name)) return mid;
+    }
+  }
+  return null;
+}
+
 function normalize(ev, mallIds) {
-  const mall = String(ev.mall || '');
-  if (!mallIds.includes(mall)) return null;
+  let mall = String(ev.mall || '').trim();
+  if (!mallIds.includes(mall)) {
+    const g = guessMallFromCompetitor((ev.brand || '') + ' ' + (ev.title || ''));
+    if (!g) return null; // 无法确定归属广场，丢弃
+    mall = g;
+  }
   let type = String(ev.type || '');
   if (!ALLOW_TYPE.includes(type)) type = 'comp';
   const brand = String(ev.brand || '').trim();
@@ -203,6 +217,11 @@ async function main() {
   for (const d of Object.keys(OLD_DATA)) for (const e of OLD_DATA[d] || []) if (e.title) seenTitles.add(e.title);
 
   const mallList = MALLS.map((m) => `${m.id}(${m.name})`).join('、');
+  const compMap = MALLS.map((m) => {
+    const comps = (COMPETITORS[m.id] || []).map((c) => c.name).join('、');
+    return `- ${m.id}(${m.name}) 的竞品：${comps}`;
+  }).join('\n');
+
   const hitsText = searchResults
     .filter((r) => r.items.length)
     .map((r) => r.items.map((it) => `[查询:${r.query}] ${it.title} | ${it.desc} | ${it.link} | ${it.pub}`).join('\n'))
@@ -210,6 +229,13 @@ async function main() {
 
   const prompt = `今天是 ${today}。请从下面的搜索结果中，找出「闽浙 12 家吾悦广场及其竞品商场」最近 14 天内发生的招商/运营动态（含已开业、即将开业、围挡筹备、招聘信号、闭店撤场、调改、大型活动）。
 吾悦广场名单（mall 字段取值）：${mallList}
+
+【mall 字段填写规则——最重要，绝不能留空】
+- 吾悦广场自身的动态：mall 填该吾悦的 id（如温州吾悦的新店 → mall 填 wz）。
+- 竞品商场/超市的动态：mall 填该竞品所对应的吾悦 id，按下面的映射表填：
+${compMap}
+- 示例：温州万象城的新店动态 → mall 填 wz；达美乐在衢州银泰城围挡 → mall 填 qz；山姆台州店开业 → mall 填 tzw。
+- mall 留空的事件会被系统直接丢弃，务必每条都填。
 
 【提取规则】
 1. 提取所有搜索结果里真实出现的动态：新店开业(open)、闭店撤场(close)、品牌调整/升级(change)、大型活动(activity)、竞品商场动态(comp，subtype=open/close/change/event/risk)。
