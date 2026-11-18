@@ -5,7 +5,7 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-18 09:51";
+window.UPDATED_AT = "2026-11-18 10:03";
 
 window.DATA = {
   "2026-11-13": [
@@ -1574,6 +1574,36 @@ window.DATA = {
       "confidence": "pending",
       "note": "与已有事件「漳州吾悦秋假「冬日充能」系列活动（11.18-11.22）」重复",
       "id": 1024
+    },
+    {
+      "type": "comp",
+      "subtype": "change",
+      "brand": "俪索仓储",
+      "title": "俪索仓储（玉环吾悦二层2026商铺）招聘中（非新开业）",
+      "mall": "yh",
+      "floor": "二层2026商铺",
+      "category": "服饰集合/仓储",
+      "when": "",
+      "source": "台州人力网",
+      "sourceUrl": "https://job.tzrl.com/company/mrc224113.htm",
+      "confidence": "pending",
+      "note": "招聘页显示玉环吾悦二层2026商铺，个体工商户2026-11-12成立，属筹备招聘信号，未明确开业",
+      "id": 1000
+    },
+    {
+      "type": "comp",
+      "subtype": "close",
+      "brand": "星巴克",
+      "title": "温州万象城金街星巴克老店闭店撤场",
+      "mall": "wz",
+      "floor": "金街",
+      "category": "咖啡",
+      "when": "",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/w/1881270119960580/?wid=1794121079239",
+      "confidence": "ok",
+      "note": "与已有事件为同一事，此处仅作补充确认",
+      "id": 1001
     }
   ]
 };
