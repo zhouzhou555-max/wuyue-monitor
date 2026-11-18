@@ -451,7 +451,7 @@ window.DATA = {
       "id": 32,
       "type": "open",
       "brand": "盒马鲜生",
-      "title": "盒马鲜生 黄岩吾悦店（B1）筹备招聘中",
+      "title": "盒马鲜生 黄岩吾悦店（已开业）日常招聘中",
       "mall": "hy",
       "floor": "B1",
       "category": "仓储/新零售",
@@ -459,13 +459,13 @@ window.DATA = {
       "source": "BOSS直聘",
       "sourceUrl": "https://www.zhipin.com/job_detail/f53f2aa93706293203N60tW6FVZY.html",
       "confidence": "pending",
-      "note": "盒马进驻黄岩吾悦-1号门，招聘中，具体开业日待核实"
+      "note": "黄岩吾悦店已开业约一年（2025年11月前后），本次为日常运营招聘，非新店筹备。此前误报为筹备中，已修正"
     },
     {
       "id": 33,
       "type": "open",
       "brand": "盒马鲜生",
-      "title": "盒马鲜生 玉环吾悦店 筹备招聘中",
+      "title": "盒马鲜生 玉环吾悦店（已开业）日常招聘中",
       "mall": "yh",
       "floor": "—",
       "category": "仓储/新零售",
@@ -473,7 +473,7 @@ window.DATA = {
       "source": "BOSS直聘",
       "sourceUrl": "https://www.zhipin.com/job_detail/cdbe17f33585377b0nd72NS5EVdQ.html",
       "confidence": "pending",
-      "note": "盒马进驻玉环吾悦，招聘收银/理货等，具体开业日待核实"
+      "note": "玉环吾悦店已开业约一年（2025年11月前后），本次为日常运营招聘，非新店筹备。此前误报为筹备中，已修正"
     },
     {
       "id": 34,
