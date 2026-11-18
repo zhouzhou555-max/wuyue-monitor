@@ -240,10 +240,14 @@ ${compMap}
 【提取规则】
 1. 提取所有搜索结果里真实出现的动态：新店开业(open)、闭店撤场(close)、品牌调整/升级(change)、大型活动(activity)、竞品商场动态(comp，subtype=open/close/change/event/risk)。
 2. 每条必须来自搜索结果、给出真实 source（媒体名）和 sourceUrl（结果里的真实链接）。严禁编造不存在的品牌或事件。
-3. 日期不明确、或只是"筹备/招聘/围挡"未正式开业的，when 留空、confidence 用 pending——这类线索也要输出，不要因日期不确定就丢弃。
-4. 与下面「已有事件」标题完全相同或明显同一件事的，不要重复输出。
-5. confidence：来源权威且日期明确=ok，其余=pending。
-6. 只输出 JSON：{"events":[{...}]}，事件字段：type,subtype,brand,title,mall,floor,category,when(YYYY-MM-DD 或空),source,sourceUrl,confidence,note。events 可为空数组（确实没有才空）。
+3. 【准确性红线——招聘/围挡信号判读】
+   - 招聘信息 ≠ 新店筹备！开业后的门店也会长期招聘（收银/理货/导购）。只有当招聘信息明确写「筹备/新店/即将开业/围挡装修中」等字样时，才可作为筹备信号，且 title 必须写明「招聘中（非新开业）」，confidence 一律 pending。
+   - 判断一家店是「新开业」必须以报道/公告中的开业日期为准；搜索结果只给招聘页时，禁止推断开业时间，更禁止把已营业门店写成筹备中。
+   - 大型连锁（盒马、山姆、万达影城等）是否为新店，优先看标题/正文是否含「首店/新店/即将开业/X月X日开业」；若只有招聘页，一律不作为新店事件输出。
+4. 日期不明确、或只是"筹备/招聘/围挡"未正式开业的，when 留空、confidence 用 pending——这类线索也要输出，但 title 必须如实写「招聘中/筹备中」，不得写成「开业」。
+5. 与下面「已有事件」标题完全相同或明显同一件事的，不要重复输出。
+6. confidence：来源权威且日期明确=ok，其余=pending。
+7. 只输出 JSON：{"events":[{...}]}，事件字段：type,subtype,brand,title,mall,floor,category,when(YYYY-MM-DD 或空),source,sourceUrl,confidence,note。events 可为空数组（确实没有才空）。
 
 【已有事件标题】
 ${[...seenTitles].slice(0, 300).join('\n') || '（无）'}
