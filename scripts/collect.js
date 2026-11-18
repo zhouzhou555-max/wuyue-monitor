@@ -148,6 +148,13 @@ function normalize(ev, mallIds) {
   const title = String(ev.title || '').trim();
   const source = String(ev.source || '').trim();
   if (!title || !source) return null;
+  // 准确性红线：纯招聘来源/招聘类事件一律丢弃
+  const RECRUIT_SITES = ['BOSS直聘', 'boss直聘', '58同城', '赶集网', '招聘网', '智联招聘', '前程无忧', 'zhipin.com'];
+  const recruitSrc = RECRUIT_SITES.some((s) => source.includes(s) || String(ev.sourceUrl || '').includes(s));
+  const recruitTxt = /招聘|招店员|招导购|招收银|招理货|招店长/.test(title + ' ' + String(ev.note || ''));
+  if (recruitSrc || (recruitTxt && !/(开业|首店|围挡|装修中)/.test(title))) {
+    return null; // 招聘信息 ≠ 新店筹备，直接丢弃
+  }
   return {
     type,
     subtype: ALLOW_SUBTYPE.includes(ev.subtype) ? ev.subtype : (type === 'comp' ? 'open' : ''),
@@ -240,11 +247,12 @@ ${compMap}
 【提取规则】
 1. 提取所有搜索结果里真实出现的动态：新店开业(open)、闭店撤场(close)、品牌调整/升级(change)、大型活动(activity)、竞品商场动态(comp，subtype=open/close/change/event/risk)。
 2. 每条必须来自搜索结果、给出真实 source（媒体名）和 sourceUrl（结果里的真实链接）。严禁编造不存在的品牌或事件。
-3. 【准确性红线——招聘/围挡信号判读】
-   - 招聘信息 ≠ 新店筹备！开业后的门店也会长期招聘（收银/理货/导购）。只有当招聘信息明确写「筹备/新店/即将开业/围挡装修中」等字样时，才可作为筹备信号，且 title 必须写明「招聘中（非新开业）」，confidence 一律 pending。
+3. 【准确性红线——招聘信息一律丢弃】
+   - 招聘信息（BOSS直聘/58同城/招聘网站/门店招聘启事）一律不输出！招聘 ≠ 新店筹备，开业多年的门店也在天天招聘。
+   - 只有当招聘信息明确写「新店筹备/即将开业/围挡装修中」且能推断出明确开业计划的，才可输出为线索；纯招聘页（哪怕标题带「新店」字样）一律直接丢弃，events 里不要出现。
    - 判断一家店是「新开业」必须以报道/公告中的开业日期为准；搜索结果只给招聘页时，禁止推断开业时间，更禁止把已营业门店写成筹备中。
-   - 大型连锁（盒马、山姆、万达影城等）是否为新店，优先看标题/正文是否含「首店/新店/即将开业/X月X日开业」；若只有招聘页，一律不作为新店事件输出。
-4. 日期不明确、或只是"筹备/招聘/围挡"未正式开业的，when 留空、confidence 用 pending——这类线索也要输出，但 title 必须如实写「招聘中/筹备中」，不得写成「开业」。
+   - 大型连锁（盒马、山姆、万达影城等）是否为新店，只看标题/正文是否含「首店/新店/即将开业/X月X日开业」的新闻报道；只有招聘页就丢弃。
+4. 围挡施工、政府设立公示等有明确进展信号的，when 留空、confidence 用 pending，title 如实写「筹备中/公示中」，不得写成「开业」。
 5. 与下面「已有事件」标题完全相同或明显同一件事的，不要重复输出。
 6. confidence：来源权威且日期明确=ok，其余=pending。
 7. 只输出 JSON：{"events":[{...}]}，事件字段：type,subtype,brand,title,mall,floor,category,when(YYYY-MM-DD 或空),source,sourceUrl,confidence,note。events 可为空数组（确实没有才空）。
