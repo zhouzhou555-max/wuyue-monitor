@@ -5,7 +5,7 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-18 10:16";
+window.UPDATED_AT = "2026-11-19 10:10";
 
 window.DATA = {
   "2026-11-13": [
@@ -1070,6 +1070,173 @@ window.DATA = {
       "confidence": "pending",
       "note": "报道提及天虹百货退出泉州",
       "id": 1012
+    }
+  ],
+  "2026-11-19": [
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "永辉超市",
+      "title": "永辉超市南翔印象城MEGA店11.20焕新归来（华东首家全健康场景店）",
+      "mall": "wz",
+      "floor": "—",
+      "category": "超市",
+      "when": "2026-11-20",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/w/1882223247464448/?wid=1795029689793#comment",
+      "confidence": "ok",
+      "note": "竞品印象城MEGA（上海南翔）调改升级后重开",
+      "id": 1000
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "IVEEN意未",
+      "title": "IVEEN意未浙江首店接棒温州万象城金街星巴克铺位",
+      "mall": "wz",
+      "floor": "金街",
+      "category": "餐饮",
+      "when": "",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/w/1881270119960580/?wid=1794121079239",
+      "confidence": "pending",
+      "note": "温州万象城金街星巴克10.26撤场，原铺位将迎IVEEN意未浙江首店",
+      "id": 1001
+    },
+    {
+      "type": "comp",
+      "subtype": "close",
+      "brand": "星巴克",
+      "title": "温州万象城金街星巴克到期撤场",
+      "mall": "wz",
+      "floor": "金街",
+      "category": "咖啡",
+      "when": "2026-10-26",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/w/1881270119960580/?wid=1794121079239",
+      "confidence": "ok",
+      "note": "经营十余年，10.26起临时闭店后确认撤场",
+      "id": 1002
+    },
+    {
+      "type": "comp",
+      "subtype": "close",
+      "brand": "三号椰",
+      "title": "三号椰温州万象城首店及滨江万象城门店均已闭店",
+      "mall": "wz",
+      "floor": "—",
+      "category": "饮品",
+      "when": "",
+      "source": "柒零叁网",
+      "sourceUrl": "http://bbs.703804.com/archiver/?tid-16455383.html",
+      "confidence": "pending",
+      "note": "报道提及三号椰首店在温州万象城，后滨江万象城也有门店，现已闭店",
+      "id": 1003
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "米其林指南美食荟",
+      "title": "首届温州米其林指南美食荟在滨江万象城启幕（11.13-11.15）",
+      "mall": "wz",
+      "floor": "—",
+      "category": "活动",
+      "when": "2026-11-13",
+      "source": "微信公众号",
+      "sourceUrl": "https://mp.weixin.qq.com/s/KisL229-82LwnN7-bhcCDA",
+      "confidence": "ok",
+      "note": "竞品滨江万象城大型美食活动",
+      "id": 1004
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "台州乱弹《心·小宴》",
+      "title": "台州马拉松期间台州银泰城上演文艺展演",
+      "mall": "lq",
+      "floor": "—",
+      "category": "活动",
+      "when": "",
+      "source": "微博",
+      "sourceUrl": "https://weibo.com/2/detail/5366260709984097?utm_source=travel",
+      "confidence": "pending",
+      "note": "竞品银泰城（椒江）马拉松配套展演",
+      "id": 1005
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "达美乐比萨、西西弗书店、小菜园",
+      "title": "衢州银泰城达美乐、西西弗、小菜园等首店围挡装修中",
+      "mall": "qz",
+      "floor": "—",
+      "category": "餐饮/书店",
+      "when": "",
+      "source": "衢州晚报",
+      "sourceUrl": "https://qzwb.qz828.com/html/2026-11/18/content_15895_4023543.htm",
+      "confidence": "pending",
+      "note": "11.13现场围挡装修，筹备中",
+      "id": 1006
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "炉边皮皮",
+      "title": "炉边皮皮漳州首店入驻碧湖万达金街",
+      "mall": "zz",
+      "floor": "金街",
+      "category": "烘焙",
+      "when": "",
+      "source": "微博",
+      "sourceUrl": "https://weibo.com/2/detail/5366615244016103",
+      "confidence": "pending",
+      "note": "官宣入驻，蹲开业，筹备中",
+      "id": 1007
+    },
+    {
+      "type": "comp",
+      "subtype": "change",
+      "brand": "芗城万达影城",
+      "title": "芗城万达影城盘活大堂闲置空间引入拼豆小店",
+      "mall": "zz",
+      "floor": "—",
+      "category": "影院/零售",
+      "when": "",
+      "source": "漳州新闻网",
+      "sourceUrl": "http://www.xcxc.cn/system/2026/11/17/031412710.shtml",
+      "confidence": "ok",
+      "note": "竞品芗城万达影城业态调整",
+      "id": 1008
+    },
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "星轶影城儿童剧",
+      "title": "漳州吾悦广场星轶影城在影厅举办儿童剧表演",
+      "mall": "zz",
+      "floor": "—",
+      "category": "活动",
+      "when": "",
+      "source": "漳州新闻网",
+      "sourceUrl": "http://www.zznews.cn/system/2026/11/17/031412636.shtml",
+      "confidence": "ok",
+      "note": "影院转型探索，举办儿童剧",
+      "id": 1009
+    },
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "有奖发票活动",
+      "title": "平潭吾悦广场落地有奖发票宣传（全闽乐购）",
+      "mall": "pt",
+      "floor": "—",
+      "category": "活动",
+      "when": "",
+      "source": "平潭网",
+      "sourceUrl": "https://www.pingtan.gov.cn/zwgk/yw/ptyw/202611/t20261111_109964.htm",
+      "confidence": "ok",
+      "note": "商场内张贴消费开票有奖标语",
+      "id": 1010
     }
   ]
 };
