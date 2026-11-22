@@ -5,7 +5,7 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-21 10:04";
+window.UPDATED_AT = "2026-11-22 09:59";
 
 window.DATA = {
   "2026-11-16": [
@@ -884,6 +884,68 @@ window.DATA = {
       "confidence": "ok",
       "note": "竞品中骏系资本运作，涉及泉州区域商业资产，属经营风险信号",
       "id": 1010
+    }
+  ],
+  "2026-11-22": [
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "",
+      "title": "仙居吾悦广场举办「尚德守法 共享食安」百姓点检进商圈活动",
+      "mall": "xj",
+      "floor": "—",
+      "category": "活动",
+      "when": "2026-11-21",
+      "source": "中国市场监管报",
+      "sourceUrl": "http://www.cmrnn.com.cn/content/2026-11/21/content_299162.html",
+      "confidence": "ok",
+      "note": "仙居县市场监管局在吾悦广场组织食品安全宣传周主题活动",
+      "id": 1000
+    },
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "",
+      "title": "玉环吾悦广场等采购团参加「商超玉环行」选品会",
+      "mall": "yh",
+      "floor": "—",
+      "category": "活动",
+      "when": "2026-11-20",
+      "source": "新浪",
+      "sourceUrl": "https://k.sina.com.cn/article_1395622123_m532f80eb03301qpe2.html",
+      "confidence": "ok",
+      "note": "玉环农文商旅推介活动配套选品会，吾悦广场、万达、大润发、盒马等采购团现场洽谈",
+      "id": 1001
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "",
+      "title": "漳州碧湖万达广场接受消防部门联合火灾隐患排查",
+      "mall": "zz",
+      "floor": "—",
+      "category": "竞品动态",
+      "when": "2026-11-16",
+      "source": "福建消防",
+      "sourceUrl": "http://fj.119.gov.cn/xw/gddt/202611/t20261120_120783.htm",
+      "confidence": "ok",
+      "note": "漳州支队联合市商务局检查碧湖万达广场消防安全",
+      "id": 1002
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "",
+      "title": "芗城万达广场开展第四季度消防疏散暨反恐防暴实战演练",
+      "mall": "zz",
+      "floor": "—",
+      "category": "竞品动态",
+      "when": "2026-11-19",
+      "source": "芗城新闻网",
+      "sourceUrl": "http://www.xcxc.cn/system/2026/11/21/031413498.shtml",
+      "confidence": "ok",
+      "note": "金品社区联合芗城万达广场开展演练",
+      "id": 1003
     }
   ]
 };
