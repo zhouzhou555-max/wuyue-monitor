@@ -5,7 +5,7 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-23 10:10";
+window.UPDATED_AT = "2026-11-24 10:11";
 
 window.DATA = {
   "2026-11-18": [
@@ -798,6 +798,53 @@ window.DATA = {
       "confidence": "ok",
       "note": "消防宣传月演练活动",
       "id": 1007
+    }
+  ],
+  "2026-11-24": [
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "中骏世界城",
+      "title": "泉州中骏世界城一楼中庭40多个香氛品牌布展",
+      "mall": "jj",
+      "floor": "一楼中庭",
+      "category": "活动",
+      "when": "2026-11-23",
+      "source": "华人头条",
+      "sourceUrl": "https://www.52hrtt.com/dbnf/n/w/info/F1795418712148",
+      "confidence": "ok",
+      "note": "竞品商场大型活动，对应晋江吾悦",
+      "id": 1000
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "衢州银泰城",
+      "title": "衢州银泰城盒马鲜生店周末客流旺盛",
+      "mall": "qz",
+      "floor": "—",
+      "category": "运营",
+      "when": "2026-11-21",
+      "source": "衢州日报",
+      "sourceUrl": "https://qzrb.qz828.com/html/2026-11/24/content_15614_4041382.htm",
+      "confidence": "ok",
+      "note": "竞品商场运营动态，对应衢州吾悦",
+      "id": 1001
+    },
+    {
+      "type": "activity",
+      "subtype": "",
+      "brand": "平潭吾悦广场",
+      "title": "医保宣传月活动走进平潭吾悦广场中庭",
+      "mall": "pt",
+      "floor": "中庭",
+      "category": "活动",
+      "when": "",
+      "source": "华声在线",
+      "sourceUrl": "https://www.voc.com.cn/news/202611/34326718.html",
+      "confidence": "pending",
+      "note": "2027年度基本医保全民参保集中宣传月主题活动",
+      "id": 1002
     }
   ]
 };
