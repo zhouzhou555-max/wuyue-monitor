@@ -5,86 +5,9 @@
          when(事件日期 YYYY-MM-DD，留空=进行中/近期) / source / sourceUrl / confidence / note
    type：open开店 / close闭店 / change调整 / activity活动 / comp竞品商场动态
    ============================================================ */
-window.UPDATED_AT = "2026-11-26 10:16";
+window.UPDATED_AT = "2026-11-27 10:18";
 
 window.DATA = {
-  "2026-11-20": [
-    {
-      "type": "comp",
-      "subtype": "close",
-      "brand": "奈雪的茶",
-      "title": "奈雪的茶瑞安吾悦广场店撤场",
-      "mall": "ra",
-      "floor": "—",
-      "category": "茶饮",
-      "when": "2026-11-05",
-      "source": "搜狐",
-      "sourceUrl": "https://www.sohu.com/a/1097648800_120415052",
-      "confidence": "ok",
-      "note": "报道称瑞安吾悦广场、乐清中金汇两家门店上周相继撤场；已有事件仅记录'奈雪的茶 瑞安吾悦店 撤场'，本条为同一事件，故不重复输出",
-      "id": 1000
-    },
-    {
-      "type": "activity",
-      "subtype": "event",
-      "brand": "温州马拉松商圈促销",
-      "title": "龙湾吾悦广场跑友专属折扣（许府牛3.9折、李宁乔丹鸿星尔克3-5.9折）",
-      "mall": "wz",
-      "floor": "—",
-      "category": "商场活动",
-      "when": "2026-11-22",
-      "source": "温州日报",
-      "sourceUrl": "https://news.66wz.com/system/2026/11/20/105875228.shtml",
-      "confidence": "ok",
-      "note": "2026温州马拉松11月22日开跑，龙湾吾悦广场多家商户推出跑友折扣",
-      "id": 1001
-    },
-    {
-      "type": "activity",
-      "subtype": "event",
-      "brand": "崇军主题市集",
-      "title": "路桥吾悦广场小圆厅举办崇军主题市集",
-      "mall": "lq",
-      "floor": "小圆厅",
-      "category": "商场活动",
-      "when": "2026-11-17",
-      "source": "浙江省退役军人事务厅",
-      "sourceUrl": "https://tyjrswt.zj.gov.cn/col/col1643650/art/2026/art_b315342bb7114d66b4a041d77a04a896.html",
-      "confidence": "ok",
-      "note": "已有事件'路桥吾悦小圆厅举办崇军主题市集'为同一事件，不重复输出",
-      "id": 1002
-    },
-    {
-      "type": "comp",
-      "subtype": "event",
-      "brand": "晋江宝龙广场马拉松促销",
-      "title": "晋江宝龙广场14家品牌推出晋马专属优惠",
-      "mall": "jj",
-      "floor": "—",
-      "category": "商场活动",
-      "when": "2026-11-20",
-      "source": "福建日报",
-      "sourceUrl": "https://jjjjb.fjdaily.com/pc/con/202611/20/content_579179.html",
-      "confidence": "ok",
-      "note": "青阳联动马拉松流量促消费，晋江宝龙广场14家品牌满减/折扣",
-      "id": 1003
-    },
-    {
-      "type": "comp",
-      "subtype": "open",
-      "brand": "山姆会员商店",
-      "title": "山姆台州首店11.12正式开业",
-      "mall": "tzw",
-      "floor": "—",
-      "category": "超市",
-      "when": "2026-11-12",
-      "source": "赢商网",
-      "sourceUrl": "http://news.winshang.com/html/074/3191.html",
-      "confidence": "ok",
-      "note": "已有事件已记录，不重复输出",
-      "id": 1004
-    }
-  ],
   "2026-11-21": [
     {
       "type": "close",
@@ -710,6 +633,128 @@ window.DATA = {
       "confidence": "ok",
       "note": "竞品新湖银泰城门店促销活动",
       "id": 1008
+    }
+  ],
+  "2026-11-27": [
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "台州市民艺术团",
+      "title": "「跟着牙博士上春晚 秀幸福」台州市民艺术团2026巡演黄岩站11月26-27日晚在黄岩吾悦广场举办",
+      "mall": "hy",
+      "floor": "—",
+      "category": "大型活动",
+      "when": "2026-11-26",
+      "source": "望潮/台州网",
+      "sourceUrl": "http://news.taizhou.com.cn/qmbb.html?id=3778188",
+      "confidence": "ok",
+      "note": "连续两晚文艺演出",
+      "id": 1000
+    },
+    {
+      "type": "activity",
+      "subtype": "event",
+      "brand": "",
+      "title": "台州湾吾悦广场餐饮楼层火锅业态迎冬季旺季，晚市客流爆满",
+      "mall": "tzw",
+      "floor": "餐饮楼层",
+      "category": "运营动态",
+      "when": "2026-11-27",
+      "source": "滨海日报",
+      "sourceUrl": "https://www.binhai.gov.cn/art/2026/11/27/art_11034_4471304.html",
+      "confidence": "ok",
+      "note": "暖经济消费报道",
+      "id": 1001
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "滨寿司",
+      "title": "滨寿司台州椒江银泰城店11月12日开业，开业十余天仍排队火爆",
+      "mall": "lq",
+      "floor": "五楼",
+      "category": "餐饮",
+      "when": "2026-11-12",
+      "source": "今日头条",
+      "sourceUrl": "https://www.toutiao.com/article/7711981159521075731/?wid=1795595844760",
+      "confidence": "ok",
+      "note": "路桥吾悦竞品银泰城（椒江）新店",
+      "id": 1002
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "金粒门",
+      "title": "新鲜零食金粒门进驻南京新百，11月26日正式营业",
+      "mall": "xj",
+      "floor": "—",
+      "category": "零食零售",
+      "when": "2026-11-26",
+      "source": "城市快看/网易",
+      "sourceUrl": "https://www.163.com/dy/article/LCJL84G80537AZ0I.html",
+      "confidence": "ok",
+      "note": "仙居吾悦竞品新百（南京新百）动态，非本地门店，供参考",
+      "id": 1003
+    },
+    {
+      "type": "comp",
+      "subtype": "change",
+      "brand": "天虹股份",
+      "title": "天虹股份2026年完成标准化升级门店4家及经营性调改优化门店18家",
+      "mall": "zz",
+      "floor": "—",
+      "category": "超市调改",
+      "when": "2026-11-26",
+      "source": "21财经",
+      "sourceUrl": "https://m.21jingji.com/timeline/c3025cca669a2bc60e0e425967f27667.html",
+      "confidence": "ok",
+      "note": "漳州吾悦竞品天虹商场体系调改",
+      "id": 1004
+    },
+    {
+      "type": "comp",
+      "subtype": "risk",
+      "brand": "中骏商管",
+      "title": "中骏商管与控股股东黄朝阳关联交易续约存不确定性，黄朝阳股权被砍四成",
+      "mall": "jj",
+      "floor": "—",
+      "category": "企业风险",
+      "when": "2026-11-24",
+      "source": "证券之星",
+      "sourceUrl": "https://finance.stockstar.com/IG2026112500023952.shtml",
+      "confidence": "ok",
+      "note": "晋江吾悦竞品中骏世界城（泉州）母公司动态",
+      "id": 1005
+    },
+    {
+      "type": "comp",
+      "subtype": "event",
+      "brand": "中骏世界城",
+      "title": "泉州中骏世界城首店集聚中心等33个「三新」项目进入拟支持名单",
+      "mall": "jj",
+      "floor": "—",
+      "category": "政策/招商",
+      "when": "2026-11-26",
+      "source": "搜狐/东南沿海消息通",
+      "sourceUrl": "https://www.sohu.com/a/1106998887_121106994",
+      "confidence": "ok",
+      "note": "晋江吾悦竞品中骏世界城（泉州）首店集聚获政策支持",
+      "id": 1006
+    },
+    {
+      "type": "comp",
+      "subtype": "open",
+      "brand": "山姆会员商店",
+      "title": "山姆台州店11月12日开业为全国第72家门店，11月内济南、青岛、石家庄、台州四城迎首店",
+      "mall": "tzw",
+      "floor": "—",
+      "category": "仓储会员店",
+      "when": "2026-11-12",
+      "source": "博晓通",
+      "sourceUrl": "https://www.bxtdata.com/insights/11044/",
+      "confidence": "ok",
+      "note": "台州湾吾悦竞品山姆台州首店，补充开店节奏信息",
+      "id": 1007
     }
   ]
 };
